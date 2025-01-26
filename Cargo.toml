@@ -1,0 +1,10 @@
+[package]
+name = "ytplaylistmaker"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+google-youtube3 = "6.0.0"
+hyper = "1.5.2"
+hyper-rustls = {version = "0.27.5", features = ["ring"]}
+tokio = {version = "1.43.0", features = ["full"]}
