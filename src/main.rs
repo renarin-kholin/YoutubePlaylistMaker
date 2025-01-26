@@ -1,11 +1,11 @@
 use std::io::Write;
 
+use std::path::Path;
 use std::process::Command;
 use std::{fs, path};
 use std::{io, process::exit};
 
-#[tokio::main]
-async fn main() {
+fn main() {
     print!("Enter the filename to read the input terms from (relative to current working directory, press enter for default: input/input_terms.txt): ");
     let _ = io::stdout().flush();
     let mut input_buffer = String::new();
@@ -21,12 +21,11 @@ async fn main() {
                 .to_str()
                 .unwrap(),
         );
-        input_buffer.insert_str(0, &format!("{current_directory}/input/input_terms.txt"));
+        input_buffer.insert_str(0, &format!("./input/input_terms.txt"));
+        input_buffer.pop();
     }
     println!("reading from: {input_buffer}");
-    let file_path =
-        path::absolute("/home/renarin/Code/Throwaway/ytplaylistmaker/input/input_terms.txt")
-            .unwrap();
+    let file_path = Path::new(&input_buffer);
     let file_contents = fs::read_to_string(file_path).expect("Could not read from the given file.");
     let input_terms: Vec<&str> = file_contents.split("\n").collect();
     let mut output_urls: Vec<String> = vec![];
@@ -49,7 +48,13 @@ async fn main() {
                 } else {
                     String::new()
                 },
-                url.trim().split_once("\n").unwrap().0
+                if url.ends_with("\n") {
+                    let mut url = url.clone();
+                    let _ = url.split_off(url.len() - 1);
+                    String::from(url)
+                } else {
+                    String::from(url.trim())
+                }
             ));
         }
     }
