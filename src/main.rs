@@ -21,7 +21,8 @@ fn main() {
         println!("Error while reading the stdin....");
         exit(-1);
     }
-    if input_buffer.eq("\n") {
+    input_buffer = input_buffer.trim_end().to_string();
+    if input_buffer.eq("\n") || input_buffer.is_empty() {
         // let current_directory = String::from(
         //     std::env::current_dir()
         //         .expect("No current directory.")
@@ -30,7 +31,6 @@ fn main() {
         // );
         input_buffer.insert_str(0, &format!("./input/input_terms.txt"));
     }
-    input_buffer.pop();
     println!("reading from: {input_buffer}");
     let file_path = fs::canonicalize(&input_buffer).expect("Error canonicalizing the path.");
     let file_contents = fs::read_to_string(file_path).expect("Could not read from the given file.");
